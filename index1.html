@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoa Nở Trong Đêm Huyền Diệu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lovers+Quarrel&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #070709 url('download.jpg') no-repeat center center fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* Subtle background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 70%, rgba(40, 80, 30, 0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 30% 50%, rgba(60, 30, 80, 0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .page-title {
+      font-family: 'Lovers Quarrel', cursive;
+      color: #b8f5e0;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      margin-bottom: 1.8rem;
+      text-align: center;
+      padding: 0 1.2rem;
+      text-shadow: 0 0 30px rgba(162, 247, 219, 0.55),
+        0 0 70px rgba(162, 247, 219, 0.2);
+      animation: titlePulse 4s ease-in-out infinite alternate;
+      letter-spacing: 0.02em;
+    }
+
+    @keyframes titlePulse {
+      from {
+        text-shadow: 0 0 20px rgba(162, 247, 219, 0.4);
+        opacity: 0.9;
+      }
+
+      to {
+        text-shadow: 0 0 50px rgba(162, 247, 219, 0.75), 0 0 100px rgba(162, 247, 219, 0.25);
+        opacity: 1;
+      }
+    }
+
+    /* ======== BOUQUET ======== */
+    .bouquet-wrap {
+      position: relative;
+      left: 350px;
+      /* Thêm dòng này: Đẩy thẻ sang phải 50px so với vị trí gốc */
+      width: 340px;
+      height: 440px;
+      overflow: visible;
+      animation: appear 1.2s ease-out both, sway 5s 1.5s ease-in-out infinite;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.92);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes sway {
+
+      0%,
+      100% {
+        transform: rotate(-0.8deg);
+      }
+
+      50% {
+        transform: rotate(0.8deg);
+      }
+    }
+
+    /* Each flower: anchored at bottom-center, rotated outward */
+    .fl {
+      position: absolute;
+      bottom: 58px;
+      left: 50%;
+      transform-origin: bottom center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Two tulip petals side by side */
+    .fl-head {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: -3px;
+      position: relative;
+    }
+
+    .fl-p {
+      border-radius: 52% 52% 38% 38% / 62% 62% 38% 38%;
+      flex-shrink: 0;
+    }
+
+    .fl-p.L {
+      transform-origin: bottom right;
+      transform: rotate(-20deg) translateX(9px);
+    }
+
+    .fl-p.R {
+      transform-origin: bottom left;
+      transform: rotate(20deg) translateX(-9px);
+    }
+
+    /* Stem */
+    .fl-stem {
+      width: 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* Leaf */
+    .fl-lf {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: 0.82;
+    }
+
+    /* Brown wrapper / knot */
+    .bq-knot {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 40px;
+      background: radial-gradient(ellipse at 40% 35%, #8b5230 20%, #4e2810 80%);
+      border-radius: 38% 38% 52% 52% / 55% 55% 45% 45%;
+      filter: blur(4.5px);
+      opacity: 0.82;
+      z-index: 250;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 class="page-title">20/10 vui vẻ và hạnh phúc em nhé 🌸💐🌸</h1>
+  <br>
+  <br>
+  <div class="bouquet-wrap" id="bq">
+    <div class="bq-knot"></div>
+  </div>
+
+  <script>
+    // Flower definitions
+    // rot  : rotation angle (negative = left, positive = right)
+    // h    : stem height in px
+    // c    : main petal color
+    // s    : scale multiplier for petal size
+    // row  : 'back' | 'mid' | 'front'  (for z-index ordering)
+    const FLOWERS = [
+      // ── back row (tallest) ──────────────────────────────────────
+      { rot: -42, h: 252, c: '#9CC6EA', s: 1.12 },   // blue   far-left
+      { rot: -27, h: 268, c: '#F4B8C8', s: 1.06 },   // pink
+      { rot: -11, h: 278, c: '#F7DFA0', s: 1.10 },   // yellow center-left
+      { rot: 5, h: 280, c: '#FCCAB0', s: 1.10 },   // peach  center-right
+      { rot: 21, h: 270, c: '#F4B8C8', s: 1.06 },   // pink
+      { rot: 40, h: 254, c: '#9CC6EA', s: 1.12 },   // blue   far-right
+
+      // ── middle row ───────────────────────────────────────────────
+      { rot: -33, h: 208, c: '#E88080', s: 0.96 },   // coral  left
+      { rot: -17, h: 222, c: '#FCCAB0', s: 1.00 },   // peach
+      { rot: 1, h: 228, c: '#F5EDD5', s: 1.02 },   // cream  center
+      { rot: 15, h: 220, c: '#F4B8C8', s: 0.98 },   // pink
+      { rot: 31, h: 210, c: '#E88080', s: 0.96 },   // coral  right
+
+      // ── front row (shortest) ────────────────────────────────────
+      { rot: -24, h: 168, c: '#9CC6EA', s: 0.90 },   // blue
+      { rot: -8, h: 178, c: '#F7DFA0', s: 0.92 },   // yellow
+      { rot: 9, h: 172, c: '#F4B8C8', s: 0.88 },   // pink
+      { rot: 26, h: 165, c: '#FCCAB0', s: 0.86 },   // peach
+    ];
+
+    const bq = document.getElementById('bq');
+
+    FLOWERS.forEach(f => {
+      const pw = Math.round(31 * f.s);  // petal width
+      const ph = Math.round(48 * f.s);  // petal height
+
+      // Randomised green tones for organic look
+      const sHue = 115 + (Math.random() - 0.5) * 12;
+      const sLit = 19 + Math.random() * 8;
+      const stemTop = `hsl(${sHue},52%,${sLit + 5}%)`;
+      const stemBottom = `hsl(${sHue},50%,${sLit - 3}%)`;
+      const leafCol = `hsl(${sHue + 3},54%,${sLit + 3}%)`;
+
+      // Leaf alternation (mirror based on lean direction)
+      const lean = f.rot >= 0 ? 1 : -1;
+      const lf1T = Math.round(f.h * 0.26);
+      const lf2T = Math.round(f.h * 0.52);
+      const lf1L = lean > 0 ? (pw / 2 - 2) : (-pw / 2 - 20);
+      const lf2L = lean > 0 ? (-pw / 2 - 20) : (pw / 2 - 2);
+      const lf1R = lean > 0 ? -38 : 38;
+      const lf2R = lean > 0 ? 38 : -38;
+
+      // Z-index: shorter stems (front) render on top
+      const zIdx = Math.round(140 - f.h / 3);
+
+      // Soft glow matching petal color
+      const glow = `0 0 ${Math.round(pw * 0.45)}px ${Math.round(pw * 0.18)}px ${f.c}55`;
+      const blurAmt = 2.6 + Math.random() * 0.8; // slight variation
+
+      const el = document.createElement('div');
+      el.className = 'fl';
+      el.style.cssText = `transform:translateX(-50%) rotate(${f.rot}deg); z-index:${zIdx};`;
+
+      el.innerHTML = `
+        <div class="fl-head">
+          <div class="fl-p L" style="
+            width:${pw}px; height:${ph}px;
+            background:${f.c};
+            filter:blur(${blurAmt}px);
+            box-shadow:${glow};
+            opacity:0.9;
+          "></div>
+          <div class="fl-p R" style="
+            width:${pw}px; height:${ph}px;
+            background:${f.c};
+            filter:blur(${blurAmt}px);
+            box-shadow:${glow};
+            opacity:0.9;
+          "></div>
+        </div>
+        <div class="fl-stem" style="
+          height:${f.h}px;
+          background:linear-gradient(to bottom, ${stemTop}, ${stemBottom});
+          filter:blur(1.8px);
+          box-shadow:2px 0 7px rgba(20,70,20,0.35);
+        ">
+          <div class="fl-lf" style="
+            width:28px; height:13px;
+            top:${lf1T}px; left:${lf1L}px;
+            background:${leafCol};
+            transform:rotate(${lf1R}deg);
+          "></div>
+          <div class="fl-lf" style="
+            width:26px; height:12px;
+            top:${lf2T}px; left:${lf2L}px;
+            background:${leafCol};
+            transform:rotate(${lf2R}deg);
+          "></div>
+        </div>
+      `;
+
+      bq.insertBefore(el, bq.querySelector('.bq-knot'));
+    });
+  </script>
+</body>
+
+</html>
